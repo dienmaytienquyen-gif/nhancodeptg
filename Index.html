@@ -134,8 +134,9 @@
         setTimeout(() => { showCodeBoard(); }, 3000);
     }
 
+    // PHẦN SỬA: Code sẽ hiện NHANCODEPTG...
     function showCodeBoard() {
-        currentCode = 'PTG' + Math.random().toString(36).substr(2, 9).toUpperCase();
+        currentCode = 'NHANCODEPTG' + Math.random().toString(36).substr(2, 6).toUpperCase();
         content.innerHTML = `
             <h3>THÔNG TIN CODE</h3>
             <div style="background:#edf2f7; padding:10px; border-radius:10px; margin: 15px 0"><p style="font-size:14px">ID: <b style="color:var(--red)">${userPlayerID}</b></p></div>
