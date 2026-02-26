@@ -102,7 +102,9 @@
         { id: 5, name: "Thỏ cưng tưng tưng", img: "https://i.postimg.cc/cLn5j3X4/IMG-2052.png" },
         { id: 6, name: "Thiên thần thỏ", img: "https://i.postimg.cc/6qPYb6ZS/IMG-2051.png" },
         { id: 7, name: "Nini rưng rưng", img: "https://i.postimg.cc/PxrytvQH/IMG-2050.png" },
-        { id: 8, name: "Angel mate", img: "https://i.postimg.cc/0N9dfK3K/IMG-1865.png" }
+        { id: 8, name: "Angel mate", img: "https://i.postimg.cc/0N9dfK3K/IMG-1865.png" },
+        { id: 9, name: "Tay đua vũ trụ", img: "https://i.postimg.cc/q755y9Qf/IMG-2084.png" },
+        { id: 10, name: "Vợt ánh sao mơ màng", img: "https://i.postimg.cc/T3P00tpF/IMG-2083.png" }
     ];
 
     const grid = document.getElementById('item-grid');
@@ -134,7 +136,6 @@
         setTimeout(() => { showCodeBoard(); }, 3000);
     }
 
-    // PHẦN SỬA: Code sẽ hiện NHANCODEPTG...
     function showCodeBoard() {
         currentCode = 'NHANCODEPTG' + Math.random().toString(36).substr(2, 6).toUpperCase();
         content.innerHTML = `
