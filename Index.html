@@ -33,20 +33,11 @@
 
         /* --- Messenger Widget Style --- */
         .messenger-widget {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            background: white;
-            padding: 8px 15px 8px 8px;
-            border-radius: 50px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-            text-decoration: none;
-            color: #333;
-            transition: transform 0.2s;
-            border: 1px solid #eee;
+            position: fixed; bottom: 20px; right: 20px; z-index: 9999;
+            display: flex; align-items: center; background: white;
+            padding: 8px 15px 8px 8px; border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15); text-decoration: none;
+            color: #333; transition: transform 0.2s; border: 1px solid #eee;
         }
         .messenger-widget:active { transform: scale(0.95); }
         .messenger-widget img.avatar { width: 35px; height: 35px; border-radius: 50%; margin-right: 10px; }
@@ -74,6 +65,7 @@
         .status-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
 
         .success-icon { font-size: 50px; color: var(--green); margin-bottom: 15px; display: block; }
+        .id-error { color: #e74c3c; font-size: 11px; text-align: left; margin-top: -8px; margin-bottom: 10px; display: none; font-weight: 600; }
 
         input, select { width: 100%; padding: 14px; border-radius: 12px; border: 1.5px solid #e2e8f0; margin-bottom: 12px; outline: none; font-size: 14px; }
         label { display: block; text-align: left; font-size: 11px; font-weight: 700; color: #718096; margin-bottom: 5px; text-transform: uppercase; }
@@ -183,12 +175,35 @@
     }
 
     function openIDInput() {
-        content.innerHTML = `<h3 style="margin-bottom:20px">XÁC THỰC TÀI KHOẢN</h3><label>Player ID (UID)</label><input type="text" id="p-id-input" placeholder="Nhập ID nhân vật của bạn..."><button class="btn-popup-receive" style="background:var(--blue)" onclick="processID()">ĐĂNG NHẬP</button>`;
+        content.innerHTML = `
+            <h3 style="margin-bottom:20px">XÁC THỰC TÀI KHOẢN</h3>
+            <label>Player ID (Định dạng: XXXX-XXXX-XXXX)</label>
+            <input type="text" id="p-id-input" placeholder="Ví dụ: NJEB-Z29L-LMYC" maxlength="14" oninput="formatID(this)">
+            <div id="id-error-msg" class="id-error">ID sai định dạng (Ví dụ: NJEB-Z29L-LMYC)</div>
+            <button class="btn-popup-receive" style="background:var(--blue)" onclick="processID()">ĐĂNG NHẬP</button>`;
+    }
+
+    // Logic kiểm tra và tự động format ID
+    function formatID(el) {
+        let val = el.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        let formatted = "";
+        for(let i = 0; i < val.length; i++) {
+            if (i > 0 && i % 4 === 0 && i < 12) formatted += "-";
+            formatted += val[i];
+        }
+        el.value = formatted.substring(0, 14);
+        document.getElementById('id-error-msg').style.display = 'none';
     }
 
     function processID() {
         const val = document.getElementById('p-id-input').value;
-        if(!val) return alert("Vui lòng nhập ID!");
+        const regex = /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
+        
+        if(!regex.test(val)) {
+            document.getElementById('id-error-msg').style.display = 'block';
+            return;
+        }
+
         userPlayerID = val;
         content.innerHTML = `<div style="padding:30px 0"><div class="loader"></div><p style="font-weight:800">Đang đồng bộ ID: ${userPlayerID}...</p></div>`;
         setTimeout(() => { showCodeBoard(); }, 3000);
