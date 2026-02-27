@@ -6,7 +6,7 @@
     <title>NHẬN CODE PLAY TOGETHER</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --red: #e74c3c; --blue: #3498db; --green: #2ecc71; --bg: #f8f9fa; --gray: #bdc3c7; }
+        :root { --red: #e74c3c; --blue: #3498db; --green: #2ecc71; --bg: #f8f9fa; --gray: #bdc3c7; --orange: #f1904e; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Lexend', sans-serif; }
         body { background: var(--bg); padding-bottom: 80px; position: relative; min-height: 100vh; }
 
@@ -33,11 +33,20 @@
 
         /* --- Messenger Widget Style --- */
         .messenger-widget {
-            position: fixed; bottom: 20px; right: 20px; z-index: 9999;
-            display: flex; align-items: center; background: white;
-            padding: 8px 15px 8px 8px; border-radius: 50px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15); text-decoration: none;
-            color: #333; transition: transform 0.2s; border: 1px solid #eee;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 8px 15px 8px 8px;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            text-decoration: none;
+            color: #333;
+            transition: transform 0.2s;
+            border: 1px solid #eee;
         }
         .messenger-widget:active { transform: scale(0.95); }
         .messenger-widget img.avatar { width: 35px; height: 35px; border-radius: 50%; margin-right: 10px; }
@@ -59,13 +68,16 @@
         .zoom-title { font-size: 18px; font-weight: 800; color: #333; margin-bottom: 20px; }
         .btn-popup-receive { background: var(--red); color: white; border: none; padding: 14px; width: 100%; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 16px; box-shadow: 0 4px 10px rgba(231, 76, 60, 0.2); }
 
+        /* Style cho phần đăng nhập ID mới */
+        .btn-login-orange { background: var(--orange); color: white; border: none; padding: 14px; width: 100%; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 18px; box-shadow: 0 4px 0 #d97b3d; }
+        .id-error-msg { color: #e74c3c; font-size: 12px; font-weight: 700; margin-top: 5px; display: none; text-align: left; }
+
         .code-display { background: #f8f9fa; border: 2px dashed #cbd5e0; padding: 15px; text-align: center; font-size: 18px; font-weight: 800; margin: 15px 0; border-radius: 12px; color: #2d3748; letter-spacing: 1px; }
         .status-badge { display: block; padding: 10px; border-radius: 10px; font-weight: 800; font-size: 13px; margin-bottom: 15px; }
         .status-pending { background: #fff3cd; color: #856404; border: 1px solid #ffe58f; }
         .status-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
 
         .success-icon { font-size: 50px; color: var(--green); margin-bottom: 15px; display: block; }
-        .id-error { color: #e74c3c; font-size: 11px; text-align: left; margin-top: -8px; margin-bottom: 10px; display: none; font-weight: 600; }
 
         input, select { width: 100%; padding: 14px; border-radius: 12px; border: 1.5px solid #e2e8f0; margin-bottom: 12px; outline: none; font-size: 14px; }
         label { display: block; text-align: left; font-size: 11px; font-weight: 700; color: #718096; margin-bottom: 5px; text-transform: uppercase; }
@@ -174,16 +186,35 @@
         content.innerHTML = `<img src="${img}" class="zoom-img"><div class="zoom-title">${name}</div>${btnPopupHtml}`;
     }
 
+    // PHẦN THAY ĐỔI THEO ẢNH CỦA BẠN
     function openIDInput() {
         content.innerHTML = `
-            <h3 style="margin-bottom:20px">XÁC THỰC TÀI KHOẢN</h3>
-            <label>Player ID (Định dạng: XXXX-XXXX-XXXX)</label>
-            <input type="text" id="p-id-input" placeholder="Ví dụ: NJEB-Z29L-LMYC" maxlength="14" oninput="formatID(this)">
-            <div id="id-error-msg" class="id-error">ID sai định dạng (Ví dụ: NJEB-Z29L-LMYC)</div>
-            <button class="btn-popup-receive" style="background:var(--blue)" onclick="processID()">ĐĂNG NHẬP</button>`;
+            <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:15px">
+                <span style="background:var(--red); color:white; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px">1</span>
+                <h3 style="font-size:18px">Vui lòng Đăng Nhập ID</h3>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
+                <label style="margin-bottom:0; font-size:14px; color:#444">Player ID</label>
+                <a href="javascript:void(0)" onclick="openHuongDan()" style="color:var(--blue); font-size:12px; text-decoration:underline; font-weight:700">Hướng dẫn lấy ID</a>
+            </div>
+            <input type="text" id="p-id-input" placeholder="Nhập UID từ 12–14 ký tự" maxlength="14" oninput="formatID(this)">
+            <div id="id-error" class="id-error-msg">ID không hợp lệ (Dạng: XXXX-XXXX-XXXX)</div>
+            <p style="font-size:11px; color:#888; text-align:left; margin-top:-5px; margin-bottom:15px">Bạn có thể dán nhanh bằng Ctrl+V. .</p>
+            <button class="btn-login-orange" onclick="processID()">Đăng Nhập</button>
+        `;
     }
 
-    // Logic kiểm tra và tự động format ID
+    function openHuongDan() {
+        content.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px">
+                <h3 style="font-size:16px">Hướng dẫn tìm ID</h3>
+                <span style="cursor:pointer; font-weight:800" onclick="openIDInput()">✕</span>
+            </div>
+            <img src="https://i.postimg.cc/bw6Zzw64/IMG-2125.png" style="width:100%; border-radius:12px">
+            <button class="btn-login-orange" style="margin-top:15px" onclick="openIDInput()">Đóng</button>
+        `;
+    }
+
     function formatID(el) {
         let val = el.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
         let formatted = "";
@@ -192,18 +223,16 @@
             formatted += val[i];
         }
         el.value = formatted.substring(0, 14);
-        document.getElementById('id-error-msg').style.display = 'none';
+        document.getElementById('id-error').style.display = 'none';
     }
 
     function processID() {
         const val = document.getElementById('p-id-input').value;
         const regex = /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
-        
         if(!regex.test(val)) {
-            document.getElementById('id-error-msg').style.display = 'block';
+            document.getElementById('id-error').style.display = 'block';
             return;
         }
-
         userPlayerID = val;
         content.innerHTML = `<div style="padding:30px 0"><div class="loader"></div><p style="font-weight:800">Đang đồng bộ ID: ${userPlayerID}...</p></div>`;
         setTimeout(() => { showCodeBoard(); }, 3000);
